@@ -1,0 +1,15 @@
+﻿{
+  "name": "ravnspire-discord-bot",
+  "version": "1.0.0",
+  "description": "RAVNSPIRE Discord Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "gotEve",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "latest",
+    "dotenv": "^16.0.0"
+  }
+}
