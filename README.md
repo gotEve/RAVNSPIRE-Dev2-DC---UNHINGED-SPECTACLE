@@ -22,3 +22,4 @@ This bot is designed to work with fps.ms hosting. Set the DISCORD_TOKEN environm
 ## Security
 
 Never commit your .env file to version control. It contains sensitive information.
+# Test deployment
