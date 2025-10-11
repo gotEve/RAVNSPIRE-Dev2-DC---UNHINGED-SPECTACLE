@@ -1,0 +1,343 @@
+-- SQLite schema for Ravnspire Multi-Game Community Bot
+-- This is a development fallback when PostgreSQL is not available
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER UNIQUE NOT NULL,
+    username TEXT NOT NULL,
+    global_xp INTEGER DEFAULT 0,
+    currency INTEGER DEFAULT 0,
+    join_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_active DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User profiles (extended profile data)
+CREATE TABLE IF NOT EXISTS user_profiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER REFERENCES users(discord_id),
+    bio TEXT DEFAULT '',
+    avatar_url TEXT,
+    title TEXT,
+    badges TEXT DEFAULT '[]', -- JSON array of equipped badges
+    preferences TEXT DEFAULT '{}', -- JSON object for user preferences
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(discord_id)
+);
+
+-- Games table
+CREATE TABLE IF NOT EXISTS games (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT NOT NULL,
+    category TEXT NOT NULL,
+    config TEXT DEFAULT '{}', -- JSON configuration
+    active BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Game progress (user progress per game)
+CREATE TABLE IF NOT EXISTS game_progress (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER REFERENCES users(discord_id),
+    game_id TEXT NOT NULL,
+    high_score INTEGER DEFAULT 0,
+    total_plays INTEGER DEFAULT 0,
+    total_score INTEGER DEFAULT 0,
+    total_time_played INTEGER DEFAULT 0, -- in milliseconds
+    level INTEGER DEFAULT 1,
+    xp INTEGER DEFAULT 0,
+    achievements TEXT DEFAULT '[]', -- JSON array of game-specific achievements
+    stats TEXT DEFAULT '{}', -- JSON object for game-specific stats
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(discord_id, game_id)
+);
+
+-- Guilds table
+CREATE TABLE IF NOT EXISTS guilds (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT DEFAULT '',
+    owner_id INTEGER REFERENCES users(discord_id),
+    level INTEGER DEFAULT 1,
+    xp INTEGER DEFAULT 0,
+    resources INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Guild members
+CREATE TABLE IF NOT EXISTS guild_members (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    guild_id INTEGER REFERENCES guilds(id),
+    discord_id INTEGER REFERENCES users(discord_id),
+    role TEXT DEFAULT 'member', -- owner, officer, member
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(guild_id, discord_id)
+);
+
+-- Neighborhoods
+CREATE TABLE IF NOT EXISTS neighborhoods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT DEFAULT '',
+    defense_level INTEGER DEFAULT 1,
+    resources INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Neighborhood plots
+CREATE TABLE IF NOT EXISTS neighborhood_plots (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    guild_id INTEGER REFERENCES guilds(id),
+    plot_number INTEGER NOT NULL,
+    purchase_price INTEGER DEFAULT 0,
+    upgrade_level INTEGER DEFAULT 0,
+    last_maintenance DATETIME DEFAULT CURRENT_TIMESTAMP,
+    for_sale BOOLEAN DEFAULT 0,
+    sale_price INTEGER DEFAULT 0,
+    UNIQUE(neighborhood_id, plot_number)
+);
+
+-- Neighborhood buildings
+CREATE TABLE IF NOT EXISTS neighborhood_buildings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    building_type TEXT NOT NULL, -- town_hall, market, defense_tower, etc.
+    level INTEGER DEFAULT 1,
+    required_resources INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Neighborhood events
+CREATE TABLE IF NOT EXISTS neighborhood_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    event_type TEXT NOT NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    goal TEXT NOT NULL,
+    progress INTEGER DEFAULT 0,
+    status TEXT DEFAULT 'upcoming' -- upcoming, active, completed
+);
+
+-- Neighborhood votes
+CREATE TABLE IF NOT EXISTS neighborhood_votes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    proposal TEXT NOT NULL,
+    guild_id INTEGER REFERENCES guilds(id),
+    vote TEXT NOT NULL, -- for, against
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Neighborhood contributions
+CREATE TABLE IF NOT EXISTS neighborhood_contributions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    guild_id INTEGER REFERENCES guilds(id),
+    amount INTEGER NOT NULL,
+    contribution_type TEXT NOT NULL, -- defense, building, event
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Lore entries
+CREATE TABLE IF NOT EXISTS lore_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    category TEXT NOT NULL, -- characters, locations, events, timeline, items, factions
+    tags TEXT DEFAULT '[]', -- JSON array of tags
+    hidden BOOLEAN DEFAULT 0,
+    unlock_requirements TEXT DEFAULT '{}', -- JSON object for unlock conditions
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Lore discoveries (user lore unlock tracking)
+CREATE TABLE IF NOT EXISTS lore_discoveries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER REFERENCES users(discord_id),
+    lore_id INTEGER REFERENCES lore_entries(id),
+    discovered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(discord_id, lore_id)
+);
+
+-- Achievements
+CREATE TABLE IF NOT EXISTS achievements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT NOT NULL,
+    category TEXT NOT NULL, -- global, game, guild, lore, social, neighborhood
+    type TEXT NOT NULL, -- global, game-specific, guild-specific, etc.
+    rarity TEXT DEFAULT 'common', -- common, uncommon, rare, epic, legendary
+    requirements TEXT DEFAULT '{}', -- JSON object for achievement criteria
+    rewards TEXT DEFAULT '{}', -- JSON object for rewards (xp, currency, badges, titles, lore unlocks)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User achievements
+CREATE TABLE IF NOT EXISTS user_achievements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER REFERENCES users(discord_id),
+    achievement_name TEXT NOT NULL,
+    unlocked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(discord_id, achievement_name)
+);
+
+-- User badges (for achievement system)
+CREATE TABLE IF NOT EXISTS user_badges (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER REFERENCES users(discord_id),
+    badge_name TEXT NOT NULL,
+    earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(discord_id, badge_name)
+);
+
+-- User titles (for achievement system)
+CREATE TABLE IF NOT EXISTS user_titles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id INTEGER REFERENCES users(discord_id),
+    title_name TEXT NOT NULL,
+    earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(discord_id, title_name)
+);
+
+-- Game sessions
+CREATE TABLE IF NOT EXISTS game_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id TEXT UNIQUE NOT NULL,
+    user_id INTEGER REFERENCES users(discord_id),
+    game_name TEXT NOT NULL,
+    start_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_time DATETIME,
+    duration INTEGER, -- in milliseconds
+    state TEXT DEFAULT 'playing',
+    score INTEGER DEFAULT 0,
+    level INTEGER DEFAULT 1,
+    final_score INTEGER,
+    final_level INTEGER,
+    game_data TEXT DEFAULT '{}',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Security and anti-cheating tables
+CREATE TABLE IF NOT EXISTS user_security (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES users(discord_id),
+    status TEXT DEFAULT 'active', -- active, restricted, banned
+    restrictions TEXT DEFAULT '[]',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS security_flags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES users(discord_id),
+    flag_type TEXT NOT NULL,
+    data TEXT DEFAULT '{}',
+    severity TEXT DEFAULT 'low', -- low, medium, high, critical
+    resolved BOOLEAN DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS game_audit_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES users(discord_id),
+    action TEXT NOT NULL,
+    data TEXT DEFAULT '{}',
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Guild wars and competitions
+CREATE TABLE IF NOT EXISTS guild_wars (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    guild1_id INTEGER REFERENCES guilds(id),
+    guild2_id INTEGER REFERENCES guilds(id),
+    war_type TEXT NOT NULL, -- skirmish, siege, tournament
+    status TEXT DEFAULT 'pending', -- pending, active, completed, cancelled
+    start_time DATETIME,
+    end_time DATETIME,
+    winner_id INTEGER REFERENCES guilds(id),
+    rewards TEXT DEFAULT '{}',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS guild_competitions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    competition_type TEXT NOT NULL, -- tournament, challenge, event
+    status TEXT DEFAULT 'upcoming', -- upcoming, active, completed
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    entry_fee INTEGER DEFAULT 0,
+    rewards TEXT DEFAULT '{}',
+    max_participants INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS guild_competition_participants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    competition_id INTEGER REFERENCES guild_competitions(id),
+    guild_id INTEGER REFERENCES guilds(id),
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    score INTEGER DEFAULT 0,
+    rank INTEGER,
+    UNIQUE(competition_id, guild_id)
+);
+
+-- Neighborhood voting and defense
+CREATE TABLE IF NOT EXISTS neighborhood_proposals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    proposer_guild_id INTEGER REFERENCES guilds(id),
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    proposal_type TEXT NOT NULL, -- building, policy, event, defense
+    data TEXT DEFAULT '{}',
+    status TEXT DEFAULT 'active', -- active, passed, failed, expired
+    start_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_time DATETIME NOT NULL,
+    votes_for INTEGER DEFAULT 0,
+    votes_against INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS neighborhood_defense_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    neighborhood_id INTEGER REFERENCES neighborhoods(id),
+    attack_type TEXT NOT NULL,
+    attacker_info TEXT DEFAULT '{}',
+    defense_strength INTEGER DEFAULT 0,
+    attack_strength INTEGER DEFAULT 0,
+    result TEXT NOT NULL, -- defended, breached, partial
+    damage_taken INTEGER DEFAULT 0,
+    resources_lost INTEGER DEFAULT 0,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_global_xp ON users(global_xp);
+CREATE INDEX IF NOT EXISTS idx_game_progress_discord_id ON game_progress(discord_id);
+CREATE INDEX IF NOT EXISTS idx_game_progress_game_id ON game_progress(game_id);
+CREATE INDEX IF NOT EXISTS idx_guild_members_guild_id ON guild_members(guild_id);
+CREATE INDEX IF NOT EXISTS idx_guild_members_discord_id ON guild_members(discord_id);
+CREATE INDEX IF NOT EXISTS idx_neighborhood_plots_neighborhood_id ON neighborhood_plots(neighborhood_id);
+CREATE INDEX IF NOT EXISTS idx_neighborhood_plots_guild_id ON neighborhood_plots(guild_id);
+CREATE INDEX IF NOT EXISTS idx_lore_entries_category ON lore_entries(category);
+CREATE INDEX IF NOT EXISTS idx_lore_entries_hidden ON lore_entries(hidden);
+CREATE INDEX IF NOT EXISTS idx_achievements_type ON achievements(type);
+CREATE INDEX IF NOT EXISTS idx_user_achievements_discord_id ON user_achievements(discord_id);
+CREATE INDEX IF NOT EXISTS idx_game_sessions_user_id ON game_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_game_sessions_game_name ON game_sessions(game_name);
+CREATE INDEX IF NOT EXISTS idx_game_sessions_state ON game_sessions(state);
+CREATE INDEX IF NOT EXISTS idx_user_badges_discord_id ON user_badges(discord_id);
+CREATE INDEX IF NOT EXISTS idx_user_titles_discord_id ON user_titles(discord_id);

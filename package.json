@@ -1,15 +1,24 @@
-﻿{
-  "name": "ravnspire-discord-bot",
+{
+  "name": "ravnspire-bot",
   "version": "1.0.0",
-  "description": "RAVNSPIRE Discord Bot",
+  "description": "Multi-game Discord community bot",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node index.js",
+    "dev": "node index.js",
+    "deploy": "node deploy-commands.js"
   },
-  "author": "gotEve",
-  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "discord.js": "latest",
-    "dotenv": "^16.0.0"
-  }
+    "dotenv": "^16.0.0",
+    "pg": "^8.11.0",
+    "pg-pool": "^3.6.0",
+    "sqlite3": "^5.1.7"
+  },
+  "keywords": ["discord", "bot", "games", "community"],
+  "author": "Your Name",
+  "license": "MIT"
 }

@@ -1,6 +1,9 @@
 # Environment variables
 .env
 
+# Private documentation (contains sensitive information)
+PRIVATE_DOCUMENTATION.md
+
 # Dependencies
 node_modules/
 
@@ -20,3 +23,23 @@ coverage/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+
+# SSH keys and certificates
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# Backup files
+*.bak
+*.backup
