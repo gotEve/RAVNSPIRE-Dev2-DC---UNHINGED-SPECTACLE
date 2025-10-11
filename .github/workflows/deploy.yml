@@ -9,15 +9,35 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Deploy to server
+    - name: Deploy to Oracle Cloud Server
       uses: appleboy/ssh-action@v0.1.5
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
+        port: 22
         script: |
-          cd /home/container
+          # Navigate to bot directory
+          cd /home/ubuntu/discord-bots/ravnspire
+          
+          # Pull latest changes
+          echo "Pulling latest changes from GitHub..."
           git pull origin main
+          
+          # Install any new dependencies
+          echo "Installing dependencies..."
           npm install
+          
+          # Deploy slash commands
+          echo "Deploying slash commands..."
           node deploy-commands.js
-          pm2 restart ravnspire-bot || npm start
+          
+          # Restart the bot with PM2
+          echo "Restarting bot..."
+          pm2 restart ravnspire-bot
+          
+          # Check bot status
+          echo "Checking bot status..."
+          pm2 status
+          
+          echo "Deployment completed successfully!"
