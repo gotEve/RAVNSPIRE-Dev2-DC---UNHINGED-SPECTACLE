@@ -3,6 +3,7 @@
 
 # Private documentation (contains sensitive information)
 PRIVATE_DOCUMENTATION.md
+docs/archive/PRIVATE_DOCUMENTATION-*.md
 
 # Dependencies
 node_modules/
