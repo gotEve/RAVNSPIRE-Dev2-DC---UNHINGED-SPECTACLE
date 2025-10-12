@@ -19,13 +19,10 @@ if (!token) {
     process.exit(1);
 }
 
-// Create a new client instance with necessary intents
+// Create a new client instance with minimal intents (for now)
 const client = new Client({ 
     intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers
+        GatewayIntentBits.Guilds
     ] 
 });
 
