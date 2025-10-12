@@ -12,9 +12,9 @@ jobs:
     - name: Deploy to Oracle Cloud Server
       uses: appleboy/ssh-action@v0.1.5
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
+        host: ${{ secrets.ORACLE_HOST }}
+        username: ${{ secrets.ORACLE_USERNAME }}
+        key: ${{ secrets.ORACLE_SSH_KEY }}
         port: 22
         script: |
           # Navigate to bot directory
