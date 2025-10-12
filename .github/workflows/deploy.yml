@@ -42,12 +42,4 @@ jobs:
           echo "Checking bot status..."
           pm2 status
           
-          # Wait a moment for bot to fully initialize
-          echo "Waiting for bot to initialize..."
-          sleep 10
-          
-          # Check if bot is ready
-          echo "Checking bot logs for successful startup..."
-          timeout 5 pm2 logs ravnspire-bot --lines 5 || true
-          
           echo "Deployment completed successfully!"
