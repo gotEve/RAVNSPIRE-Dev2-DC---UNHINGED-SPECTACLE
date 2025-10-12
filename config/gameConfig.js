@@ -2,77 +2,43 @@
 const gameConfig = {
     // Available games
     games: {
-        trivia: {
-            name: 'Trivia Challenge',
-            description: 'Test your knowledge with questions from various categories',
-            category: 'knowledge',
-            minPlayers: 1,
-            maxPlayers: 1,
-            duration: 300, // 5 minutes
-            questionsPerGame: 10,
-            categories: [
-                'general',
-                'science',
-                'history',
-                'geography',
-                'entertainment',
-                'sports',
-                'technology',
-                'literature'
-            ],
-            difficulty: ['easy', 'medium', 'hard'],
-            rewards: {
-                xp: 50,
-                currency: 25,
-                bonus: {
-                    perfect: { xp: 100, currency: 50 },
-                    streak: { xp: 25, currency: 10 } // per 3 correct in a row
-                }
-            }
-        },
-        
-        adventure: {
-            name: 'Text Adventure',
-            description: 'Embark on an interactive story adventure',
-            category: 'story',
+        tetris: {
+            name: 'Tetris',
+            description: 'A classic falling block puzzle game',
+            category: 'puzzle',
             minPlayers: 1,
             maxPlayers: 1,
             duration: 600, // 10 minutes
-            chapters: 5,
-            choicesPerChapter: 3,
+            boardWidth: 10,
+            boardHeight: 20,
+            initialSpeed: 1000,
+            speedIncreasePerLevel: 100,
             rewards: {
                 xp: 75,
                 currency: 40,
                 bonus: {
-                    completion: { xp: 150, currency: 75 },
-                    exploration: { xp: 25, currency: 15 } // per hidden item found
+                    highScore: { xp: 100, currency: 50 },
+                    levelBonus: { xp: 25, currency: 15 } // per level reached
                 }
             }
         },
         
-        puzzle: {
-            name: 'Logic Puzzles',
-            description: 'Solve challenging logic and math puzzles',
-            category: 'logic',
+        tictactoe: {
+            name: 'Tic Tac Toe',
+            description: 'The classic paper-and-pencil game for two players',
+            category: 'strategy',
             minPlayers: 1,
-            maxPlayers: 1,
-            duration: 900, // 15 minutes
-            puzzlesPerGame: 5,
-            types: [
-                'sudoku',
-                'crossword',
-                'riddle',
-                'math',
-                'pattern',
-                'wordplay'
-            ],
-            difficulty: ['easy', 'medium', 'hard', 'expert'],
+            maxPlayers: 2,
+            duration: 300, // 5 minutes
+            boardSize: 3,
+            winCondition: 3,
+            aiDifficulty: 'easy',
             rewards: {
-                xp: 60,
-                currency: 30,
+                xp: 50,
+                currency: 25,
                 bonus: {
-                    speed: { xp: 50, currency: 25 }, // for quick completion
-                    accuracy: { xp: 30, currency: 15 } // for perfect score
+                    win: { xp: 75, currency: 35 },
+                    draw: { xp: 25, currency: 15 }
                 }
             }
         }
