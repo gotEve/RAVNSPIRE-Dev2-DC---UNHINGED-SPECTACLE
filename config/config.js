@@ -27,6 +27,11 @@ const config = {
         sessionTimeout: 30 * 60 * 1000, // 30 minutes
         questionTimeout: 60 * 1000, // 1 minute per question
         
+        // Session management
+        session: {
+            cleanupInterval: 5 * 60 * 1000, // 5 minutes
+        },
+        
         // Leaderboard limits
         leaderboardLimit: 10,
     },
