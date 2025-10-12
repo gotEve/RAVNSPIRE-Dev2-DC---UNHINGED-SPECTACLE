@@ -2,6 +2,16 @@
 
 A comprehensive Discord bot for the RAVNSPIRE community featuring games, guild management, achievements, and automated deployment.
 
+## 🟢 **CURRENT STATUS: FULLY OPERATIONAL**
+
+- ✅ **Bot Online**: RavnSpire#0606 connected to Discord
+- ✅ **All Commands Working**: 34 slash commands deployed and functional
+- ✅ **Database Connected**: PostgreSQL with full schema
+- ✅ **Automated Deployment**: GitHub Actions working perfectly
+- ✅ **All Features Active**: Games, guilds, achievements, lore management
+
+**Last Updated**: October 12, 2025 | **Version**: Production Ready
+
 ## 🎮 Features
 
 ### Core Functionality
@@ -29,7 +39,9 @@ A comprehensive Discord bot for the RAVNSPIRE community featuring games, guild m
 5. Run `node index.js` to start the bot locally
 
 ### Production Deployment
-The bot automatically deploys when you push to the main branch via GitHub Actions.
+✅ **FULLY AUTOMATED** - The bot automatically deploys when you push to the main branch via GitHub Actions.
+
+**Current Status**: Bot is live and operational with all features working!
 
 ## 🔧 Environment Variables
 
@@ -51,17 +63,50 @@ Get your bot token and client ID from the [Discord Developer Portal](https://dis
 
 ## 🎮 Available Commands
 
-### Basic Commands
+### ✅ **Currently Working Commands**
+
+#### Basic Commands
 - `/ping` - Test bot connectivity
-- `/server` - Display server information
+- `/server` - Display server information  
 - `/user` - Display user information
 
-### Game Commands
+#### Game Commands
 - `/games-play` - Start playing a game (Tetris, Tic Tac Toe)
 - `/test-games` - Test the games system
+- `/games-leaderboard` - View game leaderboards
+- `/games-stats` - View game statistics
 
-### Admin Commands
+#### Profile Commands
+- `/profile` - View your profile
+- `/profile-edit` - Edit your profile
+- `/profile-stats` - View detailed statistics
+- `/profile-badges` - View your badges
+
+#### Guild Commands
+- `/guild-create` - Create a new guild
+- `/guild-join` - Join a guild
+- `/guild-info` - View guild information
+- `/guild-leaderboard` - View guild rankings
+- `/guild-wars` - Manage guild wars
+- `/guild-competitions` - Guild competitions
+
+#### Neighborhood Commands
+- `/neighborhood-join` - Join a neighborhood
+- `/neighborhood-info` - View neighborhood info
+- `/neighborhood-vote` - Vote on proposals
+- `/neighborhood-defense` - Manage defenses
+
+#### Achievement Commands
+- `/achievements` - View available achievements
+- `/achievements-progress` - View your progress
+- `/achievements-recent` - Recent achievements
+
+#### Admin Commands
 - `/lore-manage` - Manage lore entries (Administrator only)
+
+#### Community Commands
+- `/community-stats` - View community statistics
+- `/help` - Get help with commands
 
 ## 🗄️ Database
 
@@ -80,14 +125,15 @@ node database/clear-lore.js
 
 ## 🚀 Deployment
 
-### Automated Deployment
+### ✅ **Automated Deployment (WORKING)**
 - **Trigger**: Push to main branch
-- **Server**: Oracle Cloud Infrastructure
+- **Server**: Oracle Cloud Infrastructure (150.136.123.137)
 - **Process Manager**: PM2
 - **Auto-restart**: On deployment
 - **Secrets**: Uses GitHub Secrets (ORACLE_HOST, ORACLE_USERNAME, ORACLE_SSH_KEY)
+- **Status**: ✅ **FULLY OPERATIONAL** - All deployments working perfectly
 
-### Manual Deployment
+### Manual Deployment (If Needed)
 ```bash
 # On production server
 cd ~/discord-bots/ravnspire
@@ -96,6 +142,12 @@ npm install
 node deploy-commands.js
 pm2 restart ravnspire-bot
 ```
+
+### 🔧 **Deployment Troubleshooting**
+- **Issue**: Commands not showing in Discord
+- **Solution**: Run `node deploy-commands.js` manually to refresh commands
+- **Issue**: Bot offline after deployment
+- **Solution**: Check Discord intents in Developer Portal
 
 ## 🛡️ Security Features
 
