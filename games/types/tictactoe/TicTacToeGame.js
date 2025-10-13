@@ -8,10 +8,20 @@ class TicTacToeGame extends GameBase {
     constructor() {
         super('tictactoe', {
             name: 'Tic Tac Toe',
-            description: 'Classic 3x3 grid strategy game for two players',
+            description: 'The classic paper-and-pencil game for two players',
+            category: 'strategy',
+            minPlayers: 1,
+            maxPlayers: 2,
             duration: 300, // 5 minutes
             gridSize: 3,
-            maxPlayers: 2
+            rewards: {
+                xp: 50,
+                currency: 25,
+                bonus: {
+                    win: { xp: 75, currency: 35 },
+                    draw: { xp: 25, currency: 15 }
+                }
+            }
         });
         
         this.grid = [];

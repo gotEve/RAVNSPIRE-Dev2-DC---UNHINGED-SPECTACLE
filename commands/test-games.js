@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const TetrisGame = require('../games/types/tetris/TetrisGame');
-const TicTacToeGame = require('../games/types/tictactoe/TicTacToeGame');
+const gameRegistry = require('../games/GameRegistry');
 const Database = require('../database/db');
 
 module.exports = {
@@ -17,12 +16,16 @@ module.exports = {
             const loreResult = await Database.query('SELECT COUNT(*) FROM lore_entries');
             const loreCount = loreResult.rows[0].count;
             
-            // Test game creation
-            const tetrisGame = new TetrisGame();
-            await tetrisGame.initialize(interaction.user.id);
-            
-            const tictactoeGame = new TicTacToeGame();
-            await tictactoeGame.initialize(interaction.user.id, { singlePlayer: true });
+                // Test game creation
+                const availableGames = gameRegistry.getAllGames();
+                const gameInstances = [];
+                
+                for (const gameInfo of availableGames) {
+                    const GameClass = gameInfo.class;
+                    const gameInstance = new GameClass();
+                    await gameInstance.initialize(interaction.user.id, { singlePlayer: true });
+                    gameInstances.push(gameInstance);
+                }
             
             const embed = {
                 title: '🎮 Games System Test',
@@ -31,9 +34,9 @@ module.exports = {
                 fields: [
                     { name: 'Database Connection', value: '✅ Connected', inline: true },
                     { name: 'Lore Entries', value: `${loreCount} entries found`, inline: true },
-                    { name: 'Tetris Game', value: '✅ Initialized', inline: true },
-                    { name: 'TicTacToe Game', value: '✅ Initialized', inline: true },
-                    { name: 'Available Games', value: 'Tetris, TicTacToe', inline: false },
+                        { name: 'Games Loaded', value: `${availableGames.length} games`, inline: true },
+                        { name: 'Game Instances', value: `${gameInstances.length} initialized`, inline: true },
+                        { name: 'Available Games', value: availableGames.map(g => g.name).join(', '), inline: false },
                     { name: 'Admin Commands', value: '/lore-manage (Admin only)', inline: false }
                 ],
                 footer: { text: 'Use /games-play to start playing!' }

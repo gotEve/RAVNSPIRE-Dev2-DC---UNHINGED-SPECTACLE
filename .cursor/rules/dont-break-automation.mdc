@@ -1,0 +1,5 @@
+---
+title: dont break automation
+alwaysApply: true
+---
+Don't break the automation of updating code locally here to pushing it to github to pushing it to the oracle server to ensuring the discord bot is updated and running.

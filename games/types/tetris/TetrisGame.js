@@ -8,10 +8,21 @@ class TetrisGame extends GameBase {
     constructor() {
         super('tetris', {
             name: 'Tetris',
-            description: 'Classic falling blocks puzzle game',
+            description: 'A classic falling block puzzle game',
+            category: 'puzzle',
+            minPlayers: 1,
+            maxPlayers: 1,
             duration: 600, // 10 minutes
             gridWidth: 10,
-            gridHeight: 20
+            gridHeight: 20,
+            rewards: {
+                xp: 75,
+                currency: 40,
+                bonus: {
+                    highScore: { xp: 100, currency: 50 },
+                    levelBonus: { xp: 25, currency: 15 }
+                }
+            }
         });
         
         this.grid = [];

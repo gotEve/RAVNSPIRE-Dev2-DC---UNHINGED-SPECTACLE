@@ -1,31 +1,41 @@
 const { SlashCommandBuilder } = require('discord.js');
-const TetrisGame = require('../../games/types/tetris/TetrisGame');
-const TicTacToeGame = require('../../games/types/tictactoe/TicTacToeGame');
+const gameRegistry = require('../../games/GameRegistry');
 const gameSessionManager = require('../../games/engine/GameSession');
 const Database = require('../../database/db');
 const EmbedBuilderUtil = require('../../utils/embedBuilder');
 const ButtonBuilderUtil = require('../../utils/buttonBuilder');
 
-module.exports = {
-    data: new SlashCommandBuilder()
+// Build the command dynamically based on available games
+function buildCommand() {
+    const command = new SlashCommandBuilder()
         .setName('games-play')
-        .setDescription('Start playing a game')
-        .addStringOption(option =>
-            option.setName('game')
-                .setDescription('The game to play')
-                .setRequired(true)
-                .addChoices(
-                    { name: 'Tetris', value: 'tetris' },
-                    { name: 'Tic Tac Toe', value: 'tictactoe' }
-                ))
-        .addStringOption(option =>
-            option.setName('mode')
-                .setDescription('Game mode (for Tic Tac Toe)')
-                .setRequired(false)
-                .addChoices(
-                    { name: 'Single Player (vs AI)', value: 'single' },
-                    { name: 'Multiplayer (vs Player)', value: 'multiplayer' }
-                )),
+        .setDescription('Start playing a game');
+
+    // Add game choices dynamically
+    const gameChoices = gameRegistry.getDiscordChoices();
+    command.addStringOption(option =>
+        option.setName('game')
+            .setDescription('The game to play')
+            .setRequired(true)
+            .addChoices(...gameChoices)
+    );
+
+    // Add mode option for games that support it
+    command.addStringOption(option =>
+        option.setName('mode')
+            .setDescription('Game mode (for multiplayer games)')
+            .setRequired(false)
+            .addChoices(
+                { name: 'Single Player (vs AI)', value: 'single' },
+                { name: 'Multiplayer (vs Player)', value: 'multiplayer' }
+            )
+    );
+
+    return command;
+}
+
+module.exports = {
+    data: buildCommand(),
     cooldown: 10,
     async execute(interaction) {
         try {
@@ -45,21 +55,16 @@ module.exports = {
             // Ensure user exists in database
             await Database.createUser(userId, interaction.user.username);
 
-            // Create game instance based on type
-            let gameInstance;
-            switch (gameType) {
-                case 'tetris':
-                    gameInstance = new TetrisGame();
-                    break;
-                case 'tictactoe':
-                    gameInstance = new TicTacToeGame();
-                    break;
-                default:
-                    return await interaction.reply({
-                        content: 'Game type not supported yet.',
-                        ephemeral: true
-                    });
+            // Create game instance using registry
+            const GameClass = gameRegistry.getGameClass(gameType);
+            if (!GameClass) {
+                return await interaction.reply({
+                    content: 'Game type not found.',
+                    ephemeral: true
+                });
             }
+
+            const gameInstance = new GameClass();
 
             // Start the game
             const gameState = await gameInstance.startGame(userId, {

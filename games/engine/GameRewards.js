@@ -16,16 +16,17 @@ class GameRewards {
     }
 
     // Calculate base rewards for a game completion
-    calculateBaseRewards(gameConfig, gameResult) {
+    calculateBaseRewards(gameInstance, gameResult) {
+        const gameMetadata = gameInstance.getMetadata();
         const baseRewards = {
-            xp: gameConfig.rewards?.xp || config.games.baseXP,
-            currency: gameConfig.rewards?.currency || config.games.baseCurrency,
+            xp: gameMetadata.rewards?.xp || config.games.baseXP,
+            currency: gameMetadata.rewards?.currency || config.games.baseCurrency,
             bonuses: {}
         };
 
         // Apply game-specific bonuses
-        if (gameConfig.rewards?.bonus) {
-            for (const [bonusType, bonusConfig] of Object.entries(gameConfig.rewards.bonus)) {
+        if (gameMetadata.rewards?.bonus) {
+            for (const [bonusType, bonusConfig] of Object.entries(gameMetadata.rewards.bonus)) {
                 if (this.checkBonusCondition(bonusType, gameResult)) {
                     baseRewards.xp += bonusConfig.xp || 0;
                     baseRewards.currency += bonusConfig.currency || 0;
@@ -172,8 +173,8 @@ class GameRewards {
     }
 
     // Calculate final rewards
-    async calculateFinalRewards(gameConfig, gameResult, userId) {
-        let rewards = this.calculateBaseRewards(gameConfig, gameResult);
+    async calculateFinalRewards(gameInstance, gameResult, userId) {
+        let rewards = this.calculateBaseRewards(gameInstance, gameResult);
         
         // Get user level
         const user = await Database.getUser(userId);

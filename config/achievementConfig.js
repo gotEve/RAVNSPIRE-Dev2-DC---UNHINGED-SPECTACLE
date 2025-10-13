@@ -1,432 +1,333 @@
-// Achievement configuration and definitions
-const achievementConfig = {
-    // Achievement categories
-    categories: {
-        global: {
-            name: 'Global',
-            description: 'Overall progress and milestones',
-            color: 0x808080
-        },
-        game: {
-            name: 'Games',
-            description: 'Game-specific achievements',
-            color: 0x00FF00
-        },
-        guild: {
-            name: 'Guild',
-            description: 'Guild-related achievements',
-            color: 0x8000FF
-        },
-        lore: {
-            name: 'Lore',
-            description: 'Lore discovery achievements',
-            color: 0xFF8000
-        },
-        social: {
-            name: 'Social',
-            description: 'Community interaction achievements',
-            color: 0x0080FF
-        },
-        neighborhood: {
-            name: 'Neighborhood',
-            description: 'Neighborhood participation achievements',
-            color: 0x00FFFF
-        }
-    },
+// Enhanced Achievement Configuration
+// Defines all achievements with XP, titles, and badge rewards
 
-    // Achievement definitions
-    achievements: {
-        // Global achievements
-        'first_steps': {
+const ACHIEVEMENT_CATEGORIES = {
+    // Easy - Trophy Display (50-100 XP, badges only)
+    first_steps: {
+        first_game: {
             name: 'First Steps',
-            description: 'Complete your first game',
-            category: 'global',
+            description: 'Play your first game',
+            category: 'first_steps',
             type: 'global',
-            rarity: 'common',
-            requirements: {
-                games_played: 1
-            },
-            rewards: {
-                xp: 100,
-                currency: 50,
-                badge: 'newcomer'
-            },
+            requirements: { games_played: 1 },
+            rewards: { xp: 50, badge: 'newcomer', title: null },
             hidden: false
         },
-
-        'dedicated_player': {
-            name: 'Dedicated Player',
-            description: 'Play 100 games',
-            category: 'global',
+        first_win: {
+            name: 'First Victory',
+            description: 'Win your first game',
+            category: 'first_steps',
             type: 'global',
-            rarity: 'uncommon',
-            requirements: {
-                games_played: 100
-            },
-            rewards: {
-                xp: 500,
-                currency: 250,
-                title: 'Dedicated'
-            },
+            requirements: { games_won: 1 },
+            rewards: { xp: 100, badge: 'winner_bronze', title: null },
             hidden: false
         },
-
-        'master_gamer': {
-            name: 'Master Gamer',
-            description: 'Play 1000 games',
-            category: 'global',
-            type: 'global',
-            rarity: 'legendary',
-            requirements: {
-                games_played: 1000
-            },
-            rewards: {
-                xp: 2000,
-                currency: 1000,
-                title: 'Master Gamer',
-                badge: 'legendary'
-            },
+        first_guild: {
+            name: 'Guild Member',
+            description: 'Join your first guild',
+            category: 'first_steps',
+            type: 'social',
+            requirements: { guild_joined: true },
+            rewards: { xp: 75, badge: 'guild_member', title: null },
             hidden: false
         },
-
-        'level_milestone_10': {
-            name: 'Rising Star',
-            description: 'Reach level 10',
-            category: 'global',
-            type: 'global',
-            rarity: 'common',
-            requirements: {
-                level: 10
-            },
-            rewards: {
-                xp: 200,
-                currency: 100,
-                title: 'Rising Star'
-            },
-            hidden: false
-        },
-
-        'level_milestone_50': {
-            name: 'Veteran',
-            description: 'Reach level 50',
-            category: 'global',
-            type: 'global',
-            rarity: 'rare',
-            requirements: {
-                level: 50
-            },
-            rewards: {
-                xp: 1000,
-                currency: 500,
-                title: 'Veteran'
-            },
-            hidden: false
-        },
-
-        // Game-specific achievements
-        'trivia_master': {
-            name: 'Trivia Master',
-            description: 'Get a perfect score in trivia',
-            category: 'game',
-            type: 'game-specific',
-            rarity: 'uncommon',
-            requirements: {
-                game: 'trivia',
-                perfect_score: 1
-            },
-            rewards: {
-                xp: 300,
-                currency: 150,
-                badge: 'trivia_master'
-            },
-            hidden: false
-        },
-
-        'trivia_streak': {
-            name: 'Trivia Streak',
-            description: 'Get 10 correct answers in a row in trivia',
-            category: 'game',
-            type: 'game-specific',
-            rarity: 'rare',
-            requirements: {
-                game: 'trivia',
-                streak: 10
-            },
-            rewards: {
-                xp: 400,
-                currency: 200,
-                title: 'Trivia Expert'
-            },
-            hidden: false
-        },
-
-        'adventure_explorer': {
-            name: 'Adventure Explorer',
-            description: 'Complete an adventure with all hidden items',
-            category: 'game',
-            type: 'game-specific',
-            rarity: 'uncommon',
-            requirements: {
-                game: 'adventure',
-                all_items_found: 1
-            },
-            rewards: {
-                xp: 350,
-                currency: 175,
-                badge: 'explorer'
-            },
-            hidden: false
-        },
-
-        'puzzle_solver': {
-            name: 'Puzzle Solver',
-            description: 'Solve 50 puzzles',
-            category: 'game',
-            type: 'game-specific',
-            rarity: 'uncommon',
-            requirements: {
-                game: 'puzzle',
-                puzzles_solved: 50
-            },
-            rewards: {
-                xp: 400,
-                currency: 200,
-                title: 'Puzzle Master'
-            },
-            hidden: false
-        },
-
-        // Guild achievements
-        'guild_founder': {
-            name: 'Guild Founder',
-            description: 'Create a guild',
-            category: 'guild',
-            type: 'guild',
-            rarity: 'common',
-            requirements: {
-                guild_created: 1
-            },
-            rewards: {
-                xp: 250,
-                currency: 125,
-                title: 'Founder'
-            },
-            hidden: false
-        },
-
-        'guild_leader': {
-            name: 'Guild Leader',
-            description: 'Lead a guild to level 10',
-            category: 'guild',
-            type: 'guild',
-            rarity: 'rare',
-            requirements: {
-                guild_level: 10,
-                guild_role: 'owner'
-            },
-            rewards: {
-                xp: 800,
-                currency: 400,
-                title: 'Guild Leader'
-            },
-            hidden: false
-        },
-
-        'guild_champion': {
-            name: 'Guild Champion',
-            description: 'Win a guild war',
-            category: 'guild',
-            type: 'guild',
-            rarity: 'epic',
-            requirements: {
-                guild_wars_won: 1
-            },
-            rewards: {
-                xp: 1000,
-                currency: 500,
-                badge: 'champion'
-            },
-            hidden: false
-        },
-
-        // Lore achievements
-        'lore_seeker': {
+        first_lore: {
             name: 'Lore Seeker',
-            description: 'Discover 10 lore entries',
-            category: 'lore',
+            description: 'Discover your first piece of lore',
+            category: 'first_steps',
             type: 'lore',
-            rarity: 'common',
-            requirements: {
-                lore_discovered: 10
-            },
-            rewards: {
-                xp: 200,
-                currency: 100,
-                title: 'Lore Seeker'
-            },
+            requirements: { lore_discovered: 1 },
+            rewards: { xp: 50, badge: 'lore_seeker', title: null },
             hidden: false
         },
-
-        'lore_master': {
-            name: 'Lore Master',
-            description: 'Discover 50 lore entries',
-            category: 'lore',
-            type: 'lore',
-            rarity: 'rare',
-            requirements: {
-                lore_discovered: 50
-            },
-            rewards: {
-                xp: 600,
-                currency: 300,
-                title: 'Lore Master'
-            },
-            hidden: false
-        },
-
-        'hidden_knowledge': {
-            name: 'Hidden Knowledge',
-            description: 'Discover a hidden lore entry',
-            category: 'lore',
-            type: 'lore',
-            rarity: 'uncommon',
-            requirements: {
-                hidden_lore_discovered: 1
-            },
-            rewards: {
-                xp: 400,
-                currency: 200,
-                badge: 'secret_keeper'
-            },
-            hidden: true
-        },
-
-        // Social achievements
-        'helpful_member': {
-            name: 'Helpful Member',
-            description: 'Help 10 other players',
-            category: 'social',
-            type: 'social',
-            rarity: 'common',
-            requirements: {
-                players_helped: 10
-            },
-            rewards: {
-                xp: 300,
-                currency: 150,
-                title: 'Helpful'
-            },
-            hidden: false
-        },
-
-        'community_leader': {
-            name: 'Community Leader',
-            description: 'Participate in 25 community events',
-            category: 'social',
-            type: 'social',
-            rarity: 'uncommon',
-            requirements: {
-                community_events: 25
-            },
-            rewards: {
-                xp: 500,
-                currency: 250,
-                title: 'Community Leader'
-            },
-            hidden: false
-        },
-
-        // Neighborhood achievements
-        'neighborhood_pioneer': {
-            name: 'Neighborhood Pioneer',
-            description: 'Join a neighborhood',
-            category: 'neighborhood',
-            type: 'neighborhood',
-            rarity: 'common',
-            requirements: {
-                neighborhood_joined: 1
-            },
-            rewards: {
-                xp: 200,
-                currency: 100,
-                title: 'Pioneer'
-            },
-            hidden: false
-        },
-
-        'neighborhood_builder': {
-            name: 'Neighborhood Builder',
-            description: 'Contribute 1000 resources to neighborhood buildings',
-            category: 'neighborhood',
-            type: 'neighborhood',
-            rarity: 'uncommon',
-            requirements: {
-                neighborhood_contributions: 1000
-            },
-            rewards: {
-                xp: 400,
-                currency: 200,
-                title: 'Builder'
-            },
-            hidden: false
-        },
-
-        'neighborhood_defender': {
-            name: 'Neighborhood Defender',
-            description: 'Successfully defend a neighborhood from attack',
-            category: 'neighborhood',
-            type: 'neighborhood',
-            rarity: 'rare',
-            requirements: {
-                successful_defenses: 1
-            },
-            rewards: {
-                xp: 600,
-                currency: 300,
-                badge: 'defender'
-            },
+        first_plot: {
+            name: 'Homeowner',
+            description: 'Purchase your first residential plot',
+            category: 'first_steps',
+            type: 'housing',
+            requirements: { plot_owned: 1 },
+            rewards: { xp: 100, badge: 'homeowner', title: null },
             hidden: false
         }
     },
 
-    // Achievement tracking configuration
-    tracking: {
-        // How often to check for achievement progress (in milliseconds)
-        checkInterval: 30 * 1000, // 30 seconds
-        
-        // Events that trigger achievement checks
-        triggers: [
-            'game_completed',
-            'level_up',
-            'guild_joined',
-            'guild_created',
-            'lore_discovered',
-            'neighborhood_joined',
-            'neighborhood_contribution',
-            'community_event_participation'
-        ]
+    // Medium - Small Rewards (500-1500 XP, titles)
+    social: {
+        married_30_days: {
+            name: 'Devoted Partner',
+            description: 'Stay married for 30 days',
+            category: 'social',
+            type: 'marriage',
+            requirements: { marriage_duration_days: 30 },
+            rewards: { xp: 500, badge: 'committed', title: 'Devoted Partner' },
+            hidden: false
+        },
+        parent_of_three: {
+            name: 'Family Builder',
+            description: 'Have 3 children',
+            category: 'social',
+            type: 'family',
+            requirements: { children_count: 3 },
+            rewards: { xp: 1000, badge: 'family_builder', title: 'Family Builder' },
+            hidden: false
+        },
+        guild_officer: {
+            name: 'Guild Officer',
+            description: 'Become an officer in a guild',
+            category: 'social',
+            type: 'guild',
+            requirements: { guild_role: 'officer' },
+            rewards: { xp: 750, badge: 'officer', title: 'Guild Officer' },
+            hidden: false
+        },
+        neighborhood_mayor: {
+            name: 'Mayor',
+            description: 'Become mayor of a neighborhood',
+            category: 'social',
+            type: 'neighborhood',
+            requirements: { neighborhood_role: 'mayor' },
+            rewards: { xp: 1500, badge: 'mayor', title: 'Mayor' },
+            hidden: false
+        }
     },
 
-    // Reward configuration
-    rewards: {
-        // XP multipliers by rarity
-        xpMultipliers: {
-            common: 1,
-            uncommon: 1.5,
-            rare: 2,
-            epic: 3,
-            legendary: 5
+    // Hard - Moderate Rewards (3000-7500 XP, special titles)
+    completionist: {
+        all_lore_discovered: {
+            name: 'Lore Master',
+            description: 'Discover all available lore entries',
+            category: 'completionist',
+            type: 'lore',
+            requirements: { lore_discovered_percentage: 100 },
+            rewards: { xp: 5000, badge: 'lore_master', title: 'Lore Master' },
+            hidden: false
         },
-        
-        // Currency multipliers by rarity
-        currencyMultipliers: {
-            common: 1,
-            uncommon: 1.5,
-            rare: 2,
-            epic: 3,
-            legendary: 5
+        master_all_games: {
+            name: 'Game Master',
+            description: 'Achieve mastery in all available games',
+            category: 'completionist',
+            type: 'games',
+            requirements: { games_mastered: 'all' },
+            rewards: { xp: 7500, badge: 'game_master', title: 'Game Master' },
+            hidden: false
+        },
+        five_guilds_founded: {
+            name: 'Guild Entrepreneur',
+            description: 'Found 5 different guilds',
+            category: 'completionist',
+            type: 'guild',
+            requirements: { guilds_founded: 5 },
+            rewards: { xp: 5000, badge: 'entrepreneur', title: 'Guild Entrepreneur' },
+            hidden: false
+        },
+        century_club: {
+            name: 'Century Club',
+            description: 'Play 100+ games',
+            category: 'completionist',
+            type: 'global',
+            requirements: { games_played: 100 },
+            rewards: { xp: 3000, badge: 'century', title: 'Century Club' },
+            hidden: false
+        }
+    },
+
+    // Nearly Impossible - Major Rewards (50000+ XP, legendary titles)
+    legendary: {
+        grandmaster: {
+            name: 'Grandmaster',
+            description: 'Play 1000+ games with high performance',
+            category: 'legendary',
+            type: 'global',
+            requirements: { games_played: 1000, average_score: 150 },
+            rewards: { xp: 50000, badge: 'grandmaster_legendary', title: 'Grandmaster' },
+            hidden: false
+        },
+        dynasty_builder: {
+            name: 'Dynasty Builder',
+            description: 'Create a 5-generation family lineage',
+            category: 'legendary',
+            type: 'family',
+            requirements: { generations: 5 },
+            rewards: { xp: 75000, badge: 'dynasty', title: 'Dynasty Builder' },
+            hidden: false
+        },
+        arena_champion: {
+            name: 'Arena Champion',
+            description: 'Win 50 consecutive arena matches',
+            category: 'legendary',
+            type: 'arena',
+            requirements: { arena_wins_streak: 50 },
+            rewards: { xp: 100000, badge: 'undefeated', title: 'Arena Champion' },
+            hidden: false
+        },
+        lore_keeper: {
+            name: 'Keeper of All Lore',
+            description: 'Complete all lore volumes and maintain perfect discovery record',
+            category: 'legendary',
+            type: 'lore',
+            requirements: { lore_volumes_complete: 'all', discovery_percentage: 100 },
+            rewards: { xp: 150000, badge: 'keeper', title: 'Keeper of All Lore' },
+            hidden: false
+        }
+    },
+
+    // Faction-Specific Achievements
+    faction: {
+        human_purist: {
+            name: 'Human Purist',
+            description: 'Maintain 100% human faction purity for 100 days',
+            category: 'faction',
+            type: 'faction',
+            requirements: { faction: 'human', purity: 1.0, duration_days: 100 },
+            rewards: { xp: 2000, badge: 'human_pure', title: 'Human Purist' },
+            hidden: false
+        },
+        ai_ascended: {
+            name: 'Ascended AI',
+            description: 'Achieve perfect AI faction alignment',
+            category: 'faction',
+            type: 'faction',
+            requirements: { faction: 'ai', purity: 1.0, ai_achievements: 'all' },
+            rewards: { xp: 2000, badge: 'ai_ascended', title: 'Ascended AI' },
+            hidden: false
+        },
+        nature_harmonized: {
+            name: 'Nature\'s Chosen',
+            description: 'Achieve perfect harmony with nature',
+            category: 'faction',
+            type: 'faction',
+            requirements: { faction: 'nature', purity: 1.0, nature_achievements: 'all' },
+            rewards: { xp: 2000, badge: 'nature_harmony', title: 'Nature\'s Chosen' },
+            hidden: false
+        },
+        hybrid_master: {
+            name: 'Hybrid Master',
+            description: 'Experience all three factions through children',
+            category: 'faction',
+            type: 'faction',
+            requirements: { children_factions: ['human', 'ai', 'nature'] },
+            rewards: { xp: 5000, badge: 'hybrid', title: 'Hybrid Master' },
+            hidden: false
+        }
+    },
+
+    // Game-Specific Achievements
+    games: {
+        tetris_master: {
+            name: 'Tetris Master',
+            description: 'Score 10,000+ points in Tetris',
+            category: 'games',
+            type: 'game_specific',
+            requirements: { game: 'tetris', score: 10000 },
+            rewards: { xp: 1000, badge: 'tetris_master', title: 'Block Master' },
+            hidden: false
+        },
+        tictactoe_grandmaster: {
+            name: 'Tic Tac Toe Grandmaster',
+            description: 'Win 100 games of Tic Tac Toe',
+            category: 'games',
+            type: 'game_specific',
+            requirements: { game: 'tictactoe', wins: 100 },
+            rewards: { xp: 1500, badge: 'ttt_grandmaster', title: 'Strategy Master' },
+            hidden: false
+        }
+    },
+
+    // Arena Achievements
+    arena: {
+        practice_master: {
+            name: 'Practice Master',
+            description: 'Complete 100 practice sessions',
+            category: 'arena',
+            type: 'arena',
+            requirements: { practice_sessions: 100 },
+            rewards: { xp: 2000, badge: 'practice_master', title: 'Practice Master' },
+            hidden: false
+        },
+        tournament_winner: {
+            name: 'Tournament Winner',
+            description: 'Win a major tournament',
+            category: 'arena',
+            type: 'arena',
+            requirements: { tournament_wins: 1 },
+            rewards: { xp: 5000, badge: 'tournament_winner', title: 'Tournament Champion' },
+            hidden: false
+        },
+        boss_slayer: {
+            name: 'Boss Slayer',
+            description: 'Defeat a server-wide boss',
+            category: 'arena',
+            type: 'arena',
+            requirements: { boss_defeats: 1 },
+            rewards: { xp: 10000, badge: 'boss_slayer', title: 'Boss Slayer' },
+            hidden: false
+        }
+    },
+
+    // Resource Management Achievements
+    resources: {
+        resource_hoarder: {
+            name: 'Resource Hoarder',
+            description: 'Accumulate 10,000 of any resource',
+            category: 'resources',
+            type: 'resources',
+            requirements: { max_resource: 10000 },
+            rewards: { xp: 1500, badge: 'hoarder', title: 'Resource Hoarder' },
+            hidden: false
+        },
+        efficient_manager: {
+            name: 'Efficient Manager',
+            description: 'Maintain positive resource balance for 30 days',
+            category: 'resources',
+            type: 'resources',
+            requirements: { positive_balance_days: 30 },
+            rewards: { xp: 2000, badge: 'efficient', title: 'Efficient Manager' },
+            hidden: false
         }
     }
 };
 
-module.exports = achievementConfig;
+// Helper function to get all achievements
+function getAllAchievements() {
+    const allAchievements = {};
+    
+    for (const [category, achievements] of Object.entries(ACHIEVEMENT_CATEGORIES)) {
+        for (const [key, achievement] of Object.entries(achievements)) {
+            allAchievements[key] = {
+                ...achievement,
+                id: key
+            };
+        }
+    }
+    
+    return allAchievements;
+}
+
+// Helper function to get achievements by category
+function getAchievementsByCategory(category) {
+    return ACHIEVEMENT_CATEGORIES[category] || {};
+}
+
+// Helper function to get achievements by type
+function getAchievementsByType(type) {
+    const allAchievements = getAllAchievements();
+    return Object.values(allAchievements).filter(achievement => achievement.type === type);
+}
+
+// Helper function to check if user meets requirements
+function checkAchievementRequirements(userStats, requirements) {
+    for (const [requirement, value] of Object.entries(requirements)) {
+        if (userStats[requirement] < value) {
+            return false;
+        }
+    }
+    return true;
+}
+
+module.exports = {
+    ACHIEVEMENT_CATEGORIES,
+    getAllAchievements,
+    getAchievementsByCategory,
+    getAchievementsByType,
+    checkAchievementRequirements
+};

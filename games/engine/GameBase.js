@@ -18,6 +18,20 @@ class GameBase {
         this.data = {}; // Game-specific data
     }
 
+    // Get game metadata for registry
+    getMetadata() {
+        return {
+            id: this.gameName,
+            name: this.config.name,
+            description: this.config.description,
+            category: this.config.category || 'general',
+            minPlayers: this.config.minPlayers || 1,
+            maxPlayers: this.config.maxPlayers || 1,
+            duration: this.config.duration || 300, // 5 minutes default
+            rewards: this.config.rewards || {}
+        };
+    }
+
     // Abstract methods that must be implemented by subclasses
     async initialize(userId, options = {}) {
         throw new Error('initialize() must be implemented by subclass');
@@ -167,41 +181,92 @@ class GameBase {
         return EmbedBuilderUtil.formatDuration(Math.floor(this.getDuration() / 1000));
     }
 
-    // Reward calculation
-    calculateRewards() {
-        const baseXP = this.config.rewards?.xp || config.games.baseXP;
-        const baseCurrency = this.config.rewards?.currency || config.games.baseCurrency;
+    // Reward calculation using standardized system
+    async calculateRewards() {
+        const { gameRewardCalculator } = require('../../config/gameRewards');
         
-        // Level multiplier
-        const levelMultiplier = Math.pow(config.games.levelMultiplier, this.level - 1);
+        // Get user stats for variety bonus calculation
+        const userStats = await this.getUserStats();
         
-        // Score multiplier (if applicable)
-        const scoreMultiplier = this.score > 0 ? Math.min(this.score / 100, 2) : 1;
-        
-        // Duration bonus (faster completion = more rewards)
-        const durationBonus = Math.max(0, 1 - (this.getDuration() / (this.config.duration * 1000)));
-
-        const finalXP = Math.floor(baseXP * levelMultiplier * scoreMultiplier * (1 + durationBonus));
-        const finalCurrency = Math.floor(baseCurrency * levelMultiplier * scoreMultiplier * (1 + durationBonus));
-
-        return {
-            xp: finalXP,
-            currency: finalCurrency,
-            bonuses: {
-                level: levelMultiplier,
-                score: scoreMultiplier,
-                duration: durationBonus
-            }
+        // Prepare game data for reward calculation
+        const gameData = {
+            gameType: this.gameName,
+            score: this.score,
+            duration: this.getDuration(),
+            accuracy: this.calculateAccuracy(),
+            userFaction: userStats.current_faction || 'Human'
         };
+
+        // Calculate rewards using standardized system
+        const rewards = gameRewardCalculator.calculateRewards(gameData, userStats);
+        
+        return rewards;
+    }
+
+    // Calculate accuracy based on game performance
+    calculateAccuracy() {
+        // Default accuracy calculation - can be overridden by specific games
+        if (this.score <= 0) return 0;
+        
+        // Simple accuracy based on score vs expected score
+        const expectedScore = 100; // Base expected score
+        const accuracy = Math.min((this.score / expectedScore) * 100, 100);
+        return Math.round(accuracy);
+    }
+
+    // Get user stats for reward calculation
+    async getUserStats() {
+        try {
+            const user = await Database.getUser(this.userId);
+            const userGuild = await Database.getUserGuild(this.userId);
+            
+            // Get game variety stats
+            const varietyQuery = `
+                SELECT game_type, times_played 
+                FROM game_variety_log 
+                WHERE discord_id = $1
+            `;
+            const varietyResult = await Database.query(varietyQuery, [this.userId]);
+            
+            const gamesPlayed = {};
+            varietyResult.rows.forEach(row => {
+                gamesPlayed[row.game_type] = row.times_played;
+            });
+
+            return {
+                current_faction: user?.current_faction || 'Human',
+                guild: userGuild,
+                gamesPlayed: gamesPlayed,
+                winStreak: 0, // TODO: Implement win streak tracking
+                plots: null // TODO: Implement plot tracking
+            };
+        } catch (error) {
+            console.error('Error getting user stats:', error);
+            return {
+                current_faction: 'Human',
+                guild: null,
+                gamesPlayed: {},
+                winStreak: 0,
+                plots: null
+            };
+        }
     }
 
     // Apply rewards to user
     async applyRewards() {
-        const rewards = this.calculateRewards();
+        const rewards = await this.calculateRewards();
         
         // Update user XP and currency
         await Database.updateUserXP(this.userId, rewards.xp);
         await Database.updateUserCurrency(this.userId, rewards.currency);
+
+        // Update faction-specific resources
+        if (rewards.factionResources) {
+            await this.updateFactionResources(rewards.factionResources);
+        }
+
+        // Update game variety tracking
+        await this.updateGameVariety();
 
         // Update game progress
         const game = await Database.getGame(this.gameName);
@@ -210,11 +275,46 @@ class GameBase {
                 score: this.score,
                 level: this.level,
                 duration: this.getDuration(),
-                completed: this.state === 'completed'
+                completed: this.state === 'completed',
+                multipliers: rewards.multipliers
             });
         }
 
         return rewards;
+    }
+
+    // Update faction-specific resources
+    async updateFactionResources(factionResources) {
+        try {
+            const updateQuery = `
+                INSERT INTO player_resources (discord_id, ${Object.keys(factionResources).join(', ')})
+                VALUES ($1, ${Object.keys(factionResources).map((_, i) => `$${i + 2}`).join(', ')})
+                ON CONFLICT (discord_id) DO UPDATE SET
+                    ${Object.keys(factionResources).map(key => `${key} = player_resources.${key} + EXCLUDED.${key}`).join(', ')}
+            `;
+            
+            const values = [this.userId, ...Object.values(factionResources)];
+            await Database.query(updateQuery, values);
+        } catch (error) {
+            console.error('Error updating faction resources:', error);
+        }
+    }
+
+    // Update game variety tracking
+    async updateGameVariety() {
+        try {
+            const updateQuery = `
+                INSERT INTO game_variety_log (discord_id, game_type, times_played, last_played)
+                VALUES ($1, $2, 1, CURRENT_TIMESTAMP)
+                ON CONFLICT (discord_id, game_type) DO UPDATE SET
+                    times_played = game_variety_log.times_played + 1,
+                    last_played = CURRENT_TIMESTAMP
+            `;
+            
+            await Database.query(updateQuery, [this.userId, this.gameName]);
+        } catch (error) {
+            console.error('Error updating game variety:', error);
+        }
     }
 
     // Create game result embed

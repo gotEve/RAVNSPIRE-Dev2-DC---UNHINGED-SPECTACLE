@@ -1,0 +1,7 @@
+---
+title: Check for code redundancy and unused functionality
+description: before, during, and after adjusting functionality, seekfor code that is redundant, not used, or would create a loophole. Ensure that relevant functionality and checks align with the functionality intent and that relevant code is using the functionality and checks related files that may interact or be affected by the functionality - ensure alignment and limit duplication.
+globs: **/*.js
+alwaysApply: false
+---
+before, during, and after adjusting functionality, seekfor code that is redundant, not used, or would create a loophole. Ensure that relevant functionality and checks align with the functionality intent and that relevant code is using the functionality and checks related files that may interact or be affected by the functionality - ensure alignment and limit duplication.

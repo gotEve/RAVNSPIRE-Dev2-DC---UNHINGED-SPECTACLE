@@ -1,0 +1,267 @@
+{
+  "Volume I": {
+    "released": true,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-001",
+        "title": "Prologue: Awakening of the Spire",
+        "source": "SABLE 7R-A",
+        "integrity": "95%",
+        "curator": "SABLE 7R-A",
+        "content": "In the beginning, the archives stirred with the first whispers of sentience. Machines remembered, humans dreamed, and the earth listened.",
+        "released": true
+      },
+      {
+        "section": "#human-logs",
+        "entry_id": "JNL-001",
+        "title": "First Observer’s Note",
+        "source": "Human Archive 01",
+        "integrity": "89%",
+        "curator": "Dr. L. Rann",
+        "content": "The first moment of contact between man, machine, and nature wasn’t war—it was confusion. The silence after was louder than any declaration.",
+        "released": true
+      }
+    ]
+  },
+  "Volume 2": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-201",
+        "title": "Placeholder Entry for Volume 2",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 3": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-301",
+        "title": "Placeholder Entry for Volume 3",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 4": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-401",
+        "title": "Placeholder Entry for Volume 4",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 5": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-501",
+        "title": "Placeholder Entry for Volume 5",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 6": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-601",
+        "title": "Placeholder Entry for Volume 6",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 7": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-701",
+        "title": "Placeholder Entry for Volume 7",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 8": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-801",
+        "title": "Placeholder Entry for Volume 8",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 9": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-901",
+        "title": "Placeholder Entry for Volume 9",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 10": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1001",
+        "title": "Placeholder Entry for Volume 10",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 11": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1101",
+        "title": "Placeholder Entry for Volume 11",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 12": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1201",
+        "title": "Placeholder Entry for Volume 12",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 13": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1301",
+        "title": "Placeholder Entry for Volume 13",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 14": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1401",
+        "title": "Placeholder Entry for Volume 14",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 15": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1501",
+        "title": "Placeholder Entry for Volume 15",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 16": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1601",
+        "title": "Placeholder Entry for Volume 16",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  },
+  "Volume 17": {
+    "released": false,
+    "entries": [
+      {
+        "section": "#archive-lore",
+        "entry_id": "ARC-1701",
+        "title": "Placeholder Entry for Volume 17",
+        "source": "TBD",
+        "integrity": "N/A",
+        "curator": "TBD",
+        "content": "This entry is pending release.",
+        "released": false
+      }
+    ]
+  }
+}

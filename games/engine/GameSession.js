@@ -55,7 +55,7 @@ class GameSessionManager {
             const sessionData = result.rows[0];
             // Reconstruct game instance from database
             const gameInstance = await this.reconstructGameInstance(sessionData);
-            this.activeSessions.set(sessionId, gameInstance);
+            this.activeSessions.set(sessionData.session_id, gameInstance);
             return gameInstance;
         }
 
