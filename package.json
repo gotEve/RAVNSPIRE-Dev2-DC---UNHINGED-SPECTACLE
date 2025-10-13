@@ -1,7 +1,7 @@
 {
   "name": "ravnspire-bot",
-  "version": "1.0.0",
-  "description": "Multi-game Discord community bot",
+  "version": "2.0.0",
+  "description": "Comprehensive social simulation Discord bot with advanced gameplay, faction systems, marriage & family mechanics, neighborhood governance, arena competitions, and much more",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -19,6 +19,6 @@
     "sqlite3": "^5.1.7"
   },
   "keywords": ["discord", "bot", "games", "community"],
-  "author": "Your Name",
+  "author": "Ravnspire Development Team",
   "license": "MIT"
 }
