@@ -423,3 +423,31 @@ CREATE INDEX IF NOT EXISTS idx_game_sessions_game_name ON game_sessions(game_nam
 CREATE INDEX IF NOT EXISTS idx_game_sessions_state ON game_sessions(state);
 CREATE INDEX IF NOT EXISTS idx_user_badges_discord_id ON user_badges(discord_id);
 CREATE INDEX IF NOT EXISTS idx_user_titles_discord_id ON user_titles(discord_id);
+
+-- Player resources for faction-specific resources
+CREATE TABLE IF NOT EXISTS player_resources (
+    discord_id BIGINT PRIMARY KEY REFERENCES users(discord_id),
+    food INTEGER DEFAULT 0,
+    water INTEGER DEFAULT 0,
+    energy INTEGER DEFAULT 0,
+    data_fragments INTEGER DEFAULT 0,
+    biomass INTEGER DEFAULT 0,
+    organic_matter INTEGER DEFAULT 0,
+    building_materials INTEGER DEFAULT 0,
+    technology_points INTEGER DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Game variety tracking for bonus calculations
+CREATE TABLE IF NOT EXISTS game_variety_log (
+    discord_id BIGINT REFERENCES users(discord_id),
+    game_type VARCHAR(50) NOT NULL,
+    times_played INTEGER DEFAULT 1,
+    last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (discord_id, game_type)
+);
+
+-- Additional indexes for new tables
+CREATE INDEX IF NOT EXISTS idx_player_resources_discord_id ON player_resources(discord_id);
+CREATE INDEX IF NOT EXISTS idx_game_variety_log_discord_id ON game_variety_log(discord_id);
+CREATE INDEX IF NOT EXISTS idx_game_variety_log_game_type ON game_variety_log(game_type);
